@@ -1,0 +1,768 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkillSphere | Student Career Hub</title>
+
+<style>
+:root{
+ --bg:#0c1020;
+ --panel:#151b30;
+ --panel2:#1c2440;
+ --text:#f4f5ff;
+ --muted:#9da8c6;
+ --purple:#9775fa;
+ --cyan:#4dd9d0;
+ --border:#29324e;
+ --danger:#ff7185;
+ --shadow:0 12px 35px #0003;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+ font-family:Inter,Arial,sans-serif;
+ background:var(--bg);color:var(--text);
+ min-height:100vh;transition:.2s;
+}
+body.light{
+ --bg:#f2f4fb;--panel:#fff;--panel2:#edf0fa;
+ --text:#222943;--muted:#747d98;--border:#dfe3f0;
+ --shadow:0 10px 30px #28345c12;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.layout{display:flex;min-height:100vh}
+.sidebar{
+ width:245px;background:var(--panel);
+ border-right:1px solid var(--border);
+ padding:25px 17px;position:fixed;
+ top:0;bottom:0;left:0;z-index:5;
+ display:flex;flex-direction:column;
+}
+.brand{display:flex;align-items:center;gap:10px;padding:5px 9px 32px}
+.logo{
+ width:38px;height:38px;border-radius:12px;
+ background:linear-gradient(135deg,#9876fa,#40d6d0);
+ display:grid;place-items:center;font-size:22px;color:#fff;
+}
+.brand h2{font-size:19px}
+.brand span{color:var(--cyan)}
+.nav-label{
+ color:var(--muted);font-size:10px;font-weight:bold;
+ letter-spacing:1.7px;padding:12px 12px;
+}
+.nav-btn{
+ width:100%;padding:13px 14px;border:0;
+ border-radius:10px;background:transparent;
+ color:var(--muted);text-align:left;margin-bottom:5px;
+ font-size:13px;display:flex;gap:12px;align-items:center;
+}
+.nav-btn:hover,.nav-btn.active{
+ background:linear-gradient(90deg,#9775fa25,#4dd9d015);
+ color:var(--text);
+}
+.nav-btn.active{border-left:3px solid var(--purple)}
+.sidebar-bottom{margin-top:auto}
+.user-mini{
+ background:var(--panel2);border:1px solid var(--border);
+ border-radius:12px;padding:12px;display:flex;
+ align-items:center;gap:10px;font-size:12px;
+}
+.avatar{
+ width:36px;height:36px;border-radius:50%;
+ background:linear-gradient(135deg,#9775fa,#4dd9d0);
+ display:grid;place-items:center;color:white;font-weight:bold;
+}
+.main{margin-left:245px;width:calc(100% - 245px)}
+.topbar{
+ height:75px;padding:0 30px;border-bottom:1px solid var(--border);
+ display:flex;align-items:center;justify-content:space-between;
+ background:var(--panel);
+ position:sticky;top:0;z-index:4;
+}
+.topbar h3{font-size:17px}
+.top-actions{display:flex;align-items:center;gap:12px}
+.icon-btn{
+ border:1px solid var(--border);background:var(--panel2);
+ color:var(--text);padding:10px;border-radius:9px;
+}
+.content{padding:30px;max-width:1500px;margin:auto}
+.page{display:none;animation:fade .25s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.heading{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:15px;flex-wrap:wrap;margin-bottom:24px;
+}
+.heading h1{font-size:25px;margin-bottom:7px}
+.heading p{color:var(--muted);font-size:13px}
+.btn{
+ border:0;border-radius:9px;padding:11px 17px;
+ background:var(--purple);color:white;font-weight:bold;
+ font-size:12px;
+}
+.btn:hover{filter:brightness(1.13)}
+.btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.btn.cyan{background:var(--cyan);color:#10202a}
+.btn.danger{background:var(--danger)}
+.grid{display:grid;gap:17px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:22px}
+.panel{
+ background:var(--panel);border:1px solid var(--border);
+ border-radius:15px;padding:21px;box-shadow:var(--shadow);
+}
+.stat-card{position:relative;overflow:hidden}
+.stat-card small{color:var(--muted);font-size:12px}
+.stat-card h2{font-size:29px;margin:12px 0 6px}
+.stat-card p{font-size:11px;color:var(--cyan)}
+.stat-icon{
+ position:absolute;right:17px;top:18px;
+ font-size:23px;opacity:.8;
+}
+.two-col{grid-template-columns:1.5fr 1fr}
+.panel-title{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px;margin-bottom:18px;
+}
+.panel-title h3{font-size:15px}
+.panel-title span{font-size:11px;color:var(--muted)}
+.welcome{
+ background:linear-gradient(115deg,#34256b,#192f56 65%,#13545b);
+ padding:28px;border-radius:17px;margin-bottom:22px;
+ display:flex;justify-content:space-between;align-items:center;
+ gap:20px;overflow:hidden;
+}
+.welcome h2{font-size:23px;margin-bottom:9px}
+.welcome p{font-size:13px;color:#d4d7ed;line-height:1.6}
+.welcome-art{font-size:65px}
+.progress-row{margin:16px 0}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px}
+.progress-label span:last-child{color:var(--cyan)}
+.progress{
+ height:8px;border-radius:20px;background:var(--panel2);overflow:hidden;
+}
+.progress div{
+ height:100%;border-radius:20px;
+ background:linear-gradient(90deg,var(--purple),var(--cyan));
+}
+.activity{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.activity:last-child{border:0}
+.activity-icon{
+ width:35px;height:35px;display:grid;place-items:center;
+ background:var(--panel2);border-radius:10px;
+}
+.activity strong{font-size:12px}
+.activity p{font-size:11px;color:var(--muted);margin-top:5px}
+.course-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.course-card{
+ border:1px solid var(--border);background:var(--panel);
+ border-radius:15px;overflow:hidden;
+ transition:.2s;
+}
+.course-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.course-cover{
+ height:125px;display:grid;place-items:center;font-size:48px;
+ background:linear-gradient(135deg,#35265e,#1a4560);
+}
+.cover-2{background:linear-gradient(135deg,#653e78,#244a68)}
+.cover-3{background:linear-gradient(135deg,#174f55,#30376d)}
+.cover-4{background:linear-gradient(135deg,#5a3849,#32315d)}
+.cover-5{background:linear-gradient(135deg,#284d78,#37316b)}
+.cover-6{background:linear-gradient(135deg,#3d4d38,#254c61)}
+.course-body{padding:17px}
+.course-category{font-size:10px;color:var(--cyan);font-weight:bold}
+.course-body h3{font-size:15px;margin:9px 0}
+.course-body p{font-size:11px;color:var(--muted);line-height:1.5}
+.course-foot{display:flex;justify-content:space-between;align-items:center;margin-top:15px}
+.course-foot span{font-size:11px;color:var(--muted)}
+.search{
+ background:var(--panel);border:1px solid var(--border);
+ color:var(--text);border-radius:9px;padding:11px 14px;
+ width:230px;outline:none;
+}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;margin-bottom:7px;color:var(--muted)}
+.field input,.field textarea,.field select{
+ width:100%;background:var(--panel2);color:var(--text);
+ border:1px solid var(--border);border-radius:8px;
+ padding:12px;outline:none;
+}
+.field textarea{min-height:90px;resize:vertical}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.quiz-option{
+ display:block;width:100%;padding:13px;margin:9px 0;
+ border:1px solid var(--border);background:var(--panel2);
+ border-radius:9px;text-align:left;color:var(--text);
+}
+.quiz-option:hover{border-color:var(--purple)}
+.quiz-option.selected{border-color:var(--cyan);background:#4dd9d015}
+.badge{
+ display:inline-block;background:#9775fa22;color:var(--purple);
+ border-radius:20px;padding:6px 10px;font-size:10px;
+}
+.achievement-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.achievement{text-align:center;padding:24px 12px}
+.achievement .medal{font-size:42px;margin-bottom:12px}
+.achievement h3{font-size:13px;margin-bottom:6px}
+.achievement p{font-size:11px;color:var(--muted)}
+.achievement.locked{opacity:.35;filter:grayscale(1)}
+.profile-head{
+ background:linear-gradient(120deg,#30235c,#183c55);
+ border-radius:15px;padding:28px;margin-bottom:20px;
+ display:flex;align-items:center;gap:18px;
+}
+.profile-avatar{
+ width:75px;height:75px;border-radius:50%;
+ background:linear-gradient(135deg,#9775fa,#4dd9d0);
+ display:grid;place-items:center;font-size:28px;
+}
+.profile-head h2{margin-bottom:6px}
+.profile-head p{color:#ddd;font-size:12px}
+.empty{text-align:center;padding:30px;color:var(--muted);font-size:13px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:500px}
+th,td{padding:14px;text-align:left;border-bottom:1px solid var(--border);font-size:12px}
+th{color:var(--muted);font-size:10px;text-transform:uppercase}
+.toast{
+ position:fixed;right:25px;bottom:25px;background:var(--cyan);
+ color:#10202a;padding:13px 18px;border-radius:10px;
+ font-size:13px;font-weight:bold;display:none;z-index:20;
+ box-shadow:var(--shadow);
+}
+.mobile-menu{display:none}
+@media(max-width:1000px){
+ .stats{grid-template-columns:repeat(2,1fr)}
+ .course-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:700px){
+ .sidebar{width:245px;transform:translateX(-100%);transition:.25s}
+ .sidebar.open{transform:translateX(0)}
+ .main{margin-left:0;width:100%}
+ .mobile-menu{display:inline-block}
+ .topbar{padding:0 15px}
+ .content{padding:18px}
+ .two-col{grid-template-columns:1fr}
+ .course-grid{grid-template-columns:1fr}
+ .achievement-grid{grid-template-columns:repeat(2,1fr)}
+ .welcome-art{display:none}
+ .form-grid{grid-template-columns:1fr}
+ .search{width:100%}
+}
+</style>
+</head>
+
+<body>
+<div class="layout">
+
+<aside class="sidebar" id="sidebar">
+ <div class="brand">
+  <div class="logo">S</div>
+  <h2>Skill<span>Sphere</span></h2>
+ </div>
+
+ <div class="nav-label">WORKSPACE</div>
+ <button class="nav-btn active" onclick="navigate('dashboard',this)">◫ Dashboard</button>
+ <button class="nav-btn" onclick="navigate('explore',this)">⌕ Explore Courses</button>
+ <button class="nav-btn" onclick="navigate('learning',this)">▤ My Learning</button>
+ <button class="nav-btn" onclick="navigate('assessment',this)">✎ Skill Assessment</button>
+
+ <div class="nav-label">MY PROGRESS</div>
+ <button class="nav-btn" onclick="navigate('achievements',this)">✧ Achievements</button>
+ <button class="nav-btn" onclick="navigate('analytics',this)">▥ Analytics</button>
+
+ <div class="nav-label">PERSONAL</div>
+ <button class="nav-btn" onclick="navigate('profile',this)">♙ Career Profile</button>
+ <button class="nav-btn" onclick="navigate('settings',this)">⚙ Settings</button>
+
+ <div class="sidebar-bottom">
+  <div class="user-mini">
+   <div class="avatar" id="smallAvatar">S</div>
+   <div><b id="smallName">Student</b><br><span style="color:var(--muted)">Learner account</span></div>
+  </div>
+ </div>
+</aside>
+
+<main class="main">
+ <header class="topbar">
+  <div class="top-actions">
+   <button class="icon-btn mobile-menu" onclick="toggleMenu()">☰</button>
+   <h3 id="pageTitle">Dashboard</h3>
+  </div>
+  <div class="top-actions">
+   <span style="font-size:12px;color:var(--muted)" id="topName">Welcome, Student</span>
+   <button class="icon-btn" onclick="toggleTheme()" title="Change theme">◐</button>
+  </div>
+ </header>
+
+ <div class="content">
+
+ <!-- DASHBOARD -->
+ <section class="page active" id="dashboard">
+  <div class="welcome">
+   <div>
+    <h2>Build your future, one skill at a time. ✨</h2>
+    <p>Discover new knowledge, develop valuable skills and take the next step in your career.</p>
+    <br>
+    <button class="btn cyan" onclick="navigateById('explore')">Explore Courses →</button>
+   </div>
+   <div class="welcome-art">🎓</div>
+  </div>
+
+  <div class="grid stats">
+   <div class="panel stat-card"><span class="stat-icon">📚</span><small>Enrolled Courses</small><h2 id="statCourses">0</h2><p>Your learning journey</p></div>
+   <div class="panel stat-card"><span class="stat-icon">🏆</span><small>Completed Courses</small><h2 id="statCompleted">0</h2><p>Keep moving forward</p></div>
+   <div class="panel stat-card"><span class="stat-icon">⚡</span><small>Quiz Score</small><h2 id="statScore">0%</h2><p>Latest assessment</p></div>
+   <div class="panel stat-card"><span class="stat-icon">⭐</span><small>Achievements</small><h2 id="statBadges">0</h2><p>Unlocked rewards</p></div>
+  </div>
+
+  <div class="grid two-col">
+   <div class="panel">
+    <div class="panel-title"><h3>Learning Progress</h3><span>Course completion</span></div>
+    <div id="dashboardProgress"></div>
+   </div>
+   <div class="panel">
+    <div class="panel-title"><h3>Recent Activity</h3><span>Latest updates</span></div>
+    <div id="activityList"></div>
+   </div>
+  </div>
+ </section>
+
+ <!-- EXPLORE -->
+ <section class="page" id="explore">
+  <div class="heading">
+   <div><h1>Explore Courses</h1><p>Find a course that matches your career goals.</p></div>
+   <input class="search" id="courseSearch" placeholder="Search courses..." oninput="renderCourses()">
+  </div>
+  <div class="grid course-grid" id="courseGrid"></div>
+ </section>
+
+ <!-- LEARNING -->
+ <section class="page" id="learning">
+  <div class="heading">
+   <div><h1>My Learning</h1><p>Manage your enrolled courses and learning progress.</p></div>
+  </div>
+  <div class="panel">
+   <div class="panel-title"><h3>Enrolled Courses</h3><span id="learningCount">0 courses</span></div>
+   <div id="learningList"></div>
+  </div>
+ </section>
+
+ <!-- ASSESSMENT -->
+ <section class="page" id="assessment">
+  <div class="heading">
+   <div><h1>Skill Assessment</h1><p>Test your knowledge with a quick JavaScript quiz.</p></div>
+   <span class="badge">5 Questions</span>
+  </div>
+  <div class="panel" id="quizPanel">
+   <div class="panel-title"><h3>JavaScript Fundamentals</h3><span>Beginner level</span></div>
+   <div id="quizContent"></div>
+  </div>
+ </section>
+
+ <!-- ACHIEVEMENTS -->
+ <section class="page" id="achievements">
+  <div class="heading"><div><h1>Achievements</h1><p>Celebrate your learning milestones.</p></div></div>
+  <div class="grid achievement-grid" id="achievementGrid"></div>
+ </section>
+
+ <!-- ANALYTICS -->
+ <section class="page" id="analytics">
+  <div class="heading"><div><h1>Learning Analytics</h1><p>Understand your learning journey.</p></div><button class="btn secondary" onclick="exportReport()">Export Report ↓</button></div>
+  <div class="grid stats">
+   <div class="panel stat-card"><small>Courses Enrolled</small><h2 id="anaCourses">0</h2></div>
+   <div class="panel stat-card"><small>Learning Completion</small><h2 id="anaProgress">0%</h2></div>
+   <div class="panel stat-card"><small>Best Quiz Score</small><h2 id="anaBest">0%</h2></div>
+   <div class="panel stat-card"><small>Certificates</small><h2 id="anaCertificates">0</h2></div>
+  </div>
+  <div class="panel">
+   <div class="panel-title"><h3>Course Progress Report</h3></div>
+   <div id="analyticsProgress"></div>
+  </div>
+ </section>
+
+ <!-- PROFILE -->
+ <section class="page" id="profile">
+  <div class="heading"><div><h1>Career Profile</h1><p>Manage your professional student profile.</p></div></div>
+  <div class="profile-head">
+   <div class="profile-avatar" id="profileAvatar">S</div>
+   <div><h2 id="profileDisplayName">Student</h2><p id="profileDisplayEmail">Add your email address</p></div>
+  </div>
+  <div class="panel">
+   <div class="panel-title"><h3>Personal Information</h3><span>Edit your details</span></div>
+   <form onsubmit="saveProfile(event)">
+    <div class="form-grid">
+     <div class="field"><label>Full Name</label><input id="profileName" required placeholder="Enter your name"></div>
+     <div class="field"><label>Email</label><input id="profileEmail" type="email" required placeholder="Enter your email"></div>
+     <div class="field"><label>Education</label><input id="profileEducation" placeholder="e.g. B.Sc Computer Science"></div>
+     <div class="field"><label>Career Goal</label><input id="profileGoal" placeholder="e.g. Web Developer"></div>
+    </div>
+    <div class="field"><label>Skills</label><textarea id="profileSkills" placeholder="HTML, CSS, JavaScript..."></textarea></div>
+    <button class="btn" type="submit">Save Profile</button>
+   </form>
+  </div>
+ </section>
+
+ <!-- SETTINGS -->
+ <section class="page" id="settings">
+  <div class="heading"><div><h1>Settings</h1><p>Personalize your SkillSphere experience.</p></div></div>
+  <div class="panel">
+   <div class="panel-title"><h3>Appearance</h3></div>
+   <p style="color:var(--muted);font-size:13px;margin-bottom:15px">Choose your preferred display theme.</p>
+   <button class="btn" onclick="setTheme('dark')">Dark Theme</button>
+   <button class="btn secondary" onclick="setTheme('light')">Light Theme</button>
+  </div>
+  <div class="panel" style="margin-top:18px">
+   <div class="panel-title"><h3>Data Management</h3></div>
+   <p style="color:var(--muted);font-size:13px;margin-bottom:15px">Your project data is saved in this browser.</p>
+   <button class="btn secondary" onclick="exportReport()">Download My Data</button>
+   <button class="btn danger" onclick="resetData()">Reset All Data</button>
+  </div>
+ </section>
+
+ </div>
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------- DATA ----------
+const defaultCourses=[
+ {id:1,title:"Web Development",category:"DEVELOPMENT",description:"Learn HTML, CSS and JavaScript to create modern websites.",icon:"💻",duration:"6 weeks"},
+ {id:2,title:"Python Programming",category:"PROGRAMMING",description:"Explore Python basics, functions, data structures and projects.",icon:"🐍",duration:"5 weeks"},
+ {id:3,title:"Data Science",category:"ANALYTICS",description:"Discover data analysis, visualization and useful insights.",icon:"📊",duration:"8 weeks"},
+ {id:4,title:"UI/UX Design",category:"DESIGN",description:"Learn user research, wireframes and interface design.",icon:"🎨",duration:"4 weeks"},
+ {id:5,title:"Artificial Intelligence",category:"TECHNOLOGY",description:"Understand AI concepts, applications and machine learning.",icon:"🤖",duration:"7 weeks"},
+ {id:6,title:"Cyber Security",category:"SECURITY",description:"Learn digital security concepts and safe computing practices.",icon:"🔐",duration:"6 weeks"}
+];
+
+let courses=defaultCourses;
+let enrolled=JSON.parse(localStorage.getItem("ss_enrolled")||"[]");
+let completed=JSON.parse(localStorage.getItem("ss_completed")||"[]");
+let scores=JSON.parse(localStorage.getItem("ss_scores")||"[]");
+let profile=JSON.parse(localStorage.getItem("ss_profile")||"{}");
+let activities=JSON.parse(localStorage.getItem("ss_activities")||"[]");
+let quizAnswers={};
+let quizSubmitted=false;
+
+const questions=[
+ {q:"Which language is used to add interactivity to web pages?",options:["HTML","CSS","JavaScript","SQL"],answer:2},
+ {q:"Which keyword declares a variable that can be reassigned?",options:["const","let","fixed","static"],answer:1},
+ {q:"Which symbol is used for strict equality?",options:["=","==","===","!="],answer:2},
+ {q:"Which method selects an element by its ID?",options:["getElementById()","getClass()","queryAll()","selectId()"],answer:0},
+ {q:"Which method adds an item to the end of an array?",options:["pop()","shift()","push()","slice()"],answer:2}
+];
+
+// ---------- STORAGE ----------
+function saveAll(){
+ localStorage.setItem("ss_enrolled",JSON.stringify(enrolled));
+ localStorage.setItem("ss_completed",JSON.stringify(completed));
+ localStorage.setItem("ss_scores",JSON.stringify(scores));
+ localStorage.setItem("ss_profile",JSON.stringify(profile));
+ localStorage.setItem("ss_activities",JSON.stringify(activities));
+}
+
+function notify(message){
+ const toast=document.getElementById("toast");
+ toast.textContent=message;
+ toast.style.display="block";
+ clearTimeout(window.toastTimer);
+ window.toastTimer=setTimeout(()=>toast.style.display="none",2500);
+}
+
+function addActivity(message){
+ activities.unshift({message,date:new Date().toLocaleDateString()});
+ activities=activities.slice(0,8);
+ saveAll();
+ renderActivity();
+}
+
+// ---------- NAVIGATION ----------
+function navigate(page,button){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(page).classList.add("active");
+ document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+ if(button)button.classList.add("active");
+ document.getElementById("pageTitle").textContent=
+ page.charAt(0).toUpperCase()+page.slice(1);
+ document.getElementById("sidebar").classList.remove("open");
+ refresh();
+}
+
+function navigateById(page){
+ const button=[...document.querySelectorAll(".nav-btn")].find(b=>b.getAttribute("onclick").includes("'"+page+"'"));
+ navigate(page,button);
+}
+
+function toggleMenu(){
+ document.getElementById("sidebar").classList.toggle("open");
+}
+
+// ---------- COURSES ----------
+function renderCourses(){
+ const query=document.getElementById("courseSearch").value.toLowerCase();
+ const list=courses.filter(c=>
+ c.title.toLowerCase().includes(query)||
+ c.category.toLowerCase().includes(query)||
+ c.description.toLowerCase().includes(query)
+ );
+ document.getElementById("courseGrid").innerHTML=list.length?
+ list.map((c,i)=>{
+ const isEnrolled=enrolled.includes(c.id);
+ const isDone=completed.includes(c.id);
+ return `
+ <div class="course-card">
+ <div class="course-cover cover-${i%6+1}">${c.icon}</div>
+ <div class="course-body">
+ <span class="course-category">${c.category}</span>
+ <h3>${escapeHTML(c.title)}</h3>
+ <p>${escapeHTML(c.description)}</p>
+ <div class="course-foot">
+ <span>◷ ${c.duration}</span>
+ ${isDone?'<span class="badge">Completed</span>':
+ isEnrolled?'<button class="btn secondary" onclick="completeCourse('+c.id+')">Mark Complete</button>':
+ '<button class="btn" onclick="enroll('+c.id+')">Enroll Now</button>'}
+ </div>
+ </div></div>`;
+ }).join(""):'<div class="panel empty">No courses match your search.</div>';
+}
+
+function enroll(id){
+ if(enrolled.includes(id)){notify("You are already enrolled!");return;}
+ enrolled.push(id);
+ saveAll();
+ addActivity("Enrolled in "+courses.find(c=>c.id===id).title);
+ refresh();
+ notify("Course enrolled successfully!");
+}
+
+function completeCourse(id){
+ if(!enrolled.includes(id)||completed.includes(id))return;
+ completed.push(id);
+ saveAll();
+ addActivity("Completed "+courses.find(c=>c.id===id).title);
+ refresh();
+ notify("Course completed! Achievement unlocked.");
+}
+
+// ---------- LEARNING ----------
+function renderLearning(){
+ document.getElementById("learningCount").textContent=enrolled.length+" courses";
+ const list=courses.filter(c=>enrolled.includes(c.id));
+ document.getElementById("learningList").innerHTML=list.length?
+ list.map(c=>{
+ const done=completed.includes(c.id);
+ return `<div class="progress-row">
+ <div class="progress-label">
+ <b>${escapeHTML(c.icon+" "+c.title)}</b>
+ <span>${done?"100%":"In Progress"}</span>
+ </div>
+ <div class="progress"><div style="width:${done?100:35}%"></div></div>
+ <div style="margin-top:10px">
+ ${done?'<span class="badge">Completed</span>':
+ '<button class="btn cyan" onclick="completeCourse('+c.id+')">Mark as Completed</button>'}
+ </div>
+ </div>`;
+ }).join(""):'<div class="empty">You have not enrolled in any courses yet. Explore courses to get started!</div>';
+}
+
+// ---------- QUIZ ----------
+function renderQuiz(){
+ quizAnswers={};
+ quizSubmitted=false;
+ document.getElementById("quizContent").innerHTML=questions.map((q,i)=>`
+ <div style="padding:16px 0;border-bottom:1px solid var(--border)">
+ <b style="font-size:13px">${i+1}. ${q.q}</b>
+ ${q.options.map((option,j)=>`
+ <button class="quiz-option" id="q${i}o${j}" onclick="selectAnswer(${i},${j})">${String.fromCharCode(65+j)}. ${option}</button>
+ `).join("")}
+ </div>`).join("")+
+ '<br><button class="btn" onclick="submitQuiz()">Submit Assessment</button>';
+}
+
+function selectAnswer(question,answer){
+ if(quizSubmitted)return;
+ quizAnswers[question]=answer;
+ questions[question].options.forEach((_,j)=>{
+ document.getElementById("q"+question+"o"+j).classList.toggle("selected",j===answer);
+ });
+}
+
+function submitQuiz(){
+ if(Object.keys(quizAnswers).length!==questions.length){
+ notify("Please answer all five questions.");
+ return;
+ }
+ let correct=0;
+ questions.forEach((q,i)=>{if(quizAnswers[i]===q.answer)correct++;});
+ const score=Math.round(correct/questions.length*100);
+ scores.push(score);
+ quizSubmitted=true;
+ saveAll();
+ addActivity("Completed JavaScript assessment with "+score+"%");
+ document.getElementById("quizContent").innerHTML=`
+ <div style="text-align:center;padding:30px">
+ <div style="font-size:55px">${score>=60?"🏆":"📘"}</div>
+ <h2 style="font-size:38px;margin:15px">${score}%</h2>
+ <h3>${score>=60?"Great work!":"Keep Practising!"}</h3>
+ <p style="color:var(--muted);margin:12px">You answered ${correct} out of 5 questions correctly.</p>
+ <button class="btn" onclick="renderQuiz()">Try Again</button>
+ </div>`;
+ refresh();
+}
+
+// ---------- ACHIEVEMENTS ----------
+function renderAchievements(){
+ const achievements=[
+ {icon:"🚀",name:"First Enrollment",desc:"Enroll in your first course.",unlocked:enrolled.length>=1},
+ {icon:"🏅",name:"Course Finisher",desc:"Complete your first course.",unlocked:completed.length>=1},
+ {icon:"🧠",name:"Quiz Starter",desc:"Complete your first assessment.",unlocked:scores.length>=1},
+ {icon:"🌟",name:"High Achiever",desc:"Score 80% or more in a quiz.",unlocked:Math.max(0,...scores)>=80},
+ {icon:"📚",name:"Knowledge Seeker",desc:"Enroll in three courses.",unlocked:enrolled.length>=3},
+ {icon:"🎓",name:"Graduate",desc:"Complete three courses.",unlocked:completed.length>=3}
+ ];
+ document.getElementById("achievementGrid").innerHTML=achievements.map(a=>`
+ <div class="panel achievement ${a.unlocked?"":"locked"}">
+ <div class="medal">${a.icon}</div><h3>${a.name}</h3>
+ <p>${a.desc}</p><br>
+ <span class="badge">${a.unlocked?"Unlocked":"Locked"}</span>
+ </div>`).join("");
+}
+
+// ---------- ANALYTICS ----------
+function renderAnalytics(){
+ const best=Math.max(0,...scores);
+ const progress=enrolled.length?Math.round(completed.length/enrolled.length*100):0;
+ document.getElementById("anaCourses").textContent=enrolled.length;
+ document.getElementById("anaProgress").textContent=progress+"%";
+ document.getElementById("anaBest").textContent=best+"%";
+ document.getElementById("anaCertificates").textContent=completed.length;
+
+ document.getElementById("analyticsProgress").innerHTML=courses.filter(c=>enrolled.includes(c.id)).map(c=>{
+ const done=completed.includes(c.id);
+ return `<div class="progress-row">
+ <div class="progress-label"><b>${c.title}</b><span>${done?100:35}%</span></div>
+ <div class="progress"><div style="width:${done?100:35}%"></div></div>
+ </div>`;
+ }).join("")||'<div class="empty">Enroll in a course to see analytics.</div>';
+}
+
+// ---------- DASHBOARD ----------
+function renderDashboard(){
+ document.getElementById("statCourses").textContent=enrolled.length;
+ document.getElementById("statCompleted").textContent=completed.length;
+ document.getElementById("statScore").textContent=(scores.length?scores[scores.length-1]:0)+"%";
+ document.getElementById("statBadges").textContent=
+ [enrolled.length>=1,completed.length>=1,scores.length>=1,Math.max(0,...scores)>=80,enrolled.length>=3,completed.length>=3].filter(Boolean).length;
+
+ document.getElementById("dashboardProgress").innerHTML=courses.filter(c=>enrolled.includes(c.id)).map(c=>{
+ const done=completed.includes(c.id);
+ return `<div class="progress-row">
+ <div class="progress-label"><b>${c.title}</b><span>${done?"100%":"35%"}</span></div>
+ <div class="progress"><div style="width:${done?100:35}%"></div></div>
+ </div>`;
+ }).join("")||'<div class="empty">Start by enrolling in your first course.</div>';
+}
+
+function renderActivity(){
+ document.getElementById("activityList").innerHTML=activities.length?
+ activities.slice(0,5).map(a=>`
+ <div class="activity"><div class="activity-icon">✦</div>
+ <div><strong>${escapeHTML(a.message)}</strong><p>${escapeHTML(a.date)}</p></div></div>
+ `).join(""):'<div class="empty">Your activity will appear here.</div>';
+}
+
+// ---------- PROFILE ----------
+function saveProfile(event){
+ event.preventDefault();
+ profile={
+ name:document.getElementById("profileName").value.trim(),
+ email:document.getElementById("profileEmail").value.trim(),
+ education:document.getElementById("profileEducation").value.trim(),
+ goal:document.getElementById("profileGoal").value.trim(),
+ skills:document.getElementById("profileSkills").value.trim()
+ };
+ saveAll();
+ updateProfile();
+ addActivity("Updated career profile");
+ notify("Profile saved successfully!");
+}
+
+function updateProfile(){
+ const name=profile.name||"Student";
+ document.getElementById("smallName").textContent=name;
+ document.getElementById("topName").textContent="Welcome, "+name;
+ document.getElementById("smallAvatar").textContent=name.charAt(0).toUpperCase();
+ document.getElementById("profileAvatar").textContent=name.charAt(0).toUpperCase();
+ document.getElementById("profileDisplayName").textContent=name;
+ document.getElementById("profileDisplayEmail").textContent=profile.email||"Add your email address";
+
+ ["Name","Email","Education","Goal","Skills"].forEach(key=>{
+ const el=document.getElementById("profile"+key);
+ if(el)el.value=profile[key.toLowerCase()]||"";
+ });
+}
+
+// ---------- THEME ----------
+function setTheme(theme){
+ document.body.classList.toggle("light",theme==="light");
+ localStorage.setItem("ss_theme",theme);
+ notify(theme==="light"?"Light theme enabled":"Dark theme enabled");
+}
+
+function toggleTheme(){
+ setTheme(document.body.classList.contains("light")?"dark":"light");
+}
+
+// ---------- EXPORT ----------
+function exportReport(){
+ const data={profile,enrolled,completed,scores,activities};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const link=document.createElement("a");
+ link.href=url;
+ link.download="SkillSphere-Student-Report.json";
+ link.click();
+ URL.revokeObjectURL(url);
+ notify("Report downloaded!");
+}
+
+// ---------- RESET ----------
+function resetData(){
+ if(!confirm("This will delete your saved SkillSphere data. Continue?"))return;
+ ["ss_enrolled","ss_completed","ss_scores","ss_profile","ss_activities"].forEach(k=>localStorage.removeItem(k));
+ enrolled=[];completed=[];scores=[];profile={};activities=[];
+ updateProfile();
+ refresh();
+ renderQuiz();
+ notify("Project data has been reset.");
+}
+
+// ---------- SAFETY ----------
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+// ---------- REFRESH ----------
+function refresh(){
+ renderCourses();
+ renderLearning();
+ renderAchievements();
+ renderAnalytics();
+ renderDashboard();
+ renderActivity();
+ updateProfile();
+}
+
+const savedTheme=localStorage.getItem("ss_theme");
+if(savedTheme==="light")document.body.classList.add("light");
+
+updateProfile();
+renderQuiz();
+refresh();
+</script>
+</body>
+</html>
